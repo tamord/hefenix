@@ -1,0 +1,38 @@
+# .NET
+bin/
+obj/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache
+
+# Build
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# VS/VSCode
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# Node/Angular
+hefenix/node_modules/
+hefenix/dist/
+hefenix/.angular/
+hefenix/package-lock.json
+
+# Env
+.env
+hefenix/.env
+
+# OS
+Thumbs.db
+.DS_Store
+
