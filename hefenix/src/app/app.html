@@ -1,61 +1,46 @@
 <main class="main">
-  <section class="search-bar container">
+  <div class="search-bar-container">
+    <br><br><br>
     <input
       type="text"
-      class="input"
       placeholder="Type repository to search..."
       [value]="searchQuery()"
       (input)="searchQuery.set($any($event.target).value)"
       (keyup.enter)="onSearch()"
-      aria-label="Repository search"
+      class="search-input"
     />
+    <button class="pill" (click)="onSearch()">Search</button>
+    <a href="" (click)="onViewBookmarks($event)" class="view-bookmarks">View Bookmarks</a>
+  </div>
 
-    <button class="btn btn-pill" type="button" (click)="onSearch()">Search</button>
+  <div class="results-container">
+    <p *ngIf="loading()">Searching…</p>
+    <p *ngIf="error()" class="error-text">{{ error() }}</p>
 
-    <!-- אם יש לכם ראוט: העדיפו routerLink -->
-    <!-- <a class="link-pill ml-auto" routerLink="/bookmarks">View Bookmarks</a> -->
-    <a class="link-pill ml-auto" href="" (click)="onViewBookmarks($event)">View Bookmarks</a>
-  </section>
-
-  <section class="results container">
-    <p *ngIf="loading()" class="state state-loading">Searching…</p>
-    <p *ngIf="error()" class="state state-error">{{ error() }}</p>
-
-    <div *ngIf="results()?.items?.length" class="grid">
-      <article *ngFor="let repo of results().items" class="card">
+    <div *ngIf="results()?.items?.length" class="repo-grid">
+      <div *ngFor="let repo of results().items" class="repo-card">
         <img
-          class="avatar"
           [src]="repo.owner?.avatar_url"
           [alt]="repo.owner?.login"
-          width="48" height="48"
-          loading="lazy"
-          decoding="async"
+          width="48"
+          height="48"
+          class="repo-avatar"
         />
-        <div class="card-body">
-          <h3 class="repo-name" title="{{ repo.full_name }}">{{ repo.name }}</h3>
-
-          <div class="meta">
-            <span class="owner" *ngIf="repo.owner?.login">@{{ repo.owner?.login }}</span>
-            <span class="stars" *ngIf="repo.stargazers_count !== undefined">★ {{ repo.stargazers_count }}</span>
-            <span class="lang" *ngIf="repo.language">{{ repo.language }}</span>
-
-            <button
-              type="button"
-              class="btn btn-tag ml-auto"
-              (click)="toggleBookmark(repo)"
-              [attr.aria-pressed]="isBookmarked(repo.id)"
-            >
+        <div class="repo-details">
+          <div class="repo-name">{{ repo.name }}</div>
+          <div class="repo-actions">
+            <button type="button" (click)="toggleBookmark(repo)" class="bookmark-btn">
               {{ isBookmarked(repo.id) ? 'Bookmarked' : 'Bookmark' }}
             </button>
           </div>
         </div>
-      </article>
+      </div>
     </div>
 
-    <p *ngIf="results() && !results()?.items?.length" class="state state-empty">
+    <p *ngIf="results() && !results()?.items?.length" class="no-results">
       No repositories found.
     </p>
-  </section>
+  </div>
 </main>
 
 <router-outlet />
