@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -16,43 +16,14 @@ namespace hef1.Controllers
     public class ModyController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _config;
 
-        public ModyController(IHttpClientFactory httpClientFactory)
+        public ModyController(IConfiguration config, IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-        }
+            _config = config;
+        }      
 
-        // GET: api/<ModyController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value3", "value4" };
-        }
-
-        // GET api/<ModyController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<ModyController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ModyController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ModyController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
 
         // GET api/<ModyController>/search?query=KEYWORD
         [AllowAnonymous]
@@ -67,9 +38,10 @@ namespace hef1.Controllers
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.UserAgent.Clear();
             httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("hef1-app", "1.0"));
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));                       
 
-            var requestUrl = $"https://api.github.com/search/repositories?q={Uri.EscapeDataString(query)}";
+            var baseUrl = _config["GitHub:BaseUrl"];
+            var requestUrl = $"{baseUrl}/search/repositories?q={Uri.EscapeDataString(query)}";
 
             using var response = await httpClient.GetAsync(requestUrl);
             var content = await response.Content.ReadAsStringAsync();
