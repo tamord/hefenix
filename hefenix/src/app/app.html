@@ -1,46 +1,73 @@
 <main class="main">
-  <div class="search-bar-container">
-    <br><br><br>
-    <input
-      type="text"
-      placeholder="Type repository to search..."
-      [value]="searchQuery()"
-      (input)="searchQuery.set($any($event.target).value)"
-      (keyup.enter)="onSearch()"
-      class="search-input"
-    />
-    <button class="pill" (click)="onSearch()">Search</button>
-    <a href="" (click)="onViewBookmarks($event)" class="view-bookmarks">View Bookmarks</a>
+  <!-- Search -->
+  <form class="search-bar" (ngSubmit)="onSearch()">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search Repositories</mat-label>
+      <input
+        matInput
+        placeholder="Type repository to search..."
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+        (keyup.enter)="onSearch()"
+        aria-label="Repository search"
+      />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="search-btn">
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+
+    <button mat-stroked-button color="accent" type="button" (click)="onViewBookmarks($event)">
+      <mat-icon>bookmark</mat-icon>
+      View Bookmarks
+    </button>
+  </form>
+
+  <!-- Status -->
+  <div class="status-row">
+    <mat-progress-bar *ngIf="loading()" mode="indeterminate"></mat-progress-bar>
+    <p *ngIf="error()" class="error-text">{{ error() }}</p>
   </div>
 
-  <div class="results-container">
-    <p *ngIf="loading()">Searching…</p>
-    <p *ngIf="error()" class="error-text">{{ error() }}</p>
-
-    <div *ngIf="results()?.items?.length" class="repo-grid">
-      <div *ngFor="let repo of results().items" class="repo-card">
+  <!-- Results -->
+  <div *ngIf="results()?.items?.length" class="repo-grid">
+    <mat-card *ngFor="let repo of results().items" class="repo-card">
+      <div class="repo-card-content">
+        <!-- just a normal <img> (no mat-card-avatar) -->
         <img
           [src]="repo.owner?.avatar_url"
           [alt]="repo.owner?.login"
+          class="repo-avatar"
           width="48"
           height="48"
-          class="repo-avatar"
         />
-        <div class="repo-details">
-          <div class="repo-name">{{ repo.name }}</div>
-          <div class="repo-actions">
-            <button type="button" (click)="toggleBookmark(repo)" class="bookmark-btn">
-              {{ isBookmarked(repo.id) ? 'Bookmarked' : 'Bookmark' }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <p *ngIf="results() && !results()?.items?.length" class="no-results">
-      No repositories found.
-    </p>
+        <div class="repo-details">          
+
+          <h3 mat-card-title class="repo-name"> </h3>
+          <p mat-card-subtitle class="repo-owner">{{ repo.owner?.login }}</p>
+        </div>
+        <br><br>
+        <button
+          mat-stroked-button
+          color="primary"
+          class="bookmark-btn"
+          type="button"
+          (click)="toggleBookmark(repo)"
+          [attr.aria-pressed]="isBookmarked(repo.id)"
+        >
+          <mat-icon>{{ isBookmarked(repo.id) ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+          {{ isBookmarked(repo.id) ? 'Bookmarked' : 'Bookmark' }}
+        </button>
+      </div>
+    </mat-card>
   </div>
+
+  <!-- Empty -->
+  <p *ngIf="results() && !results()?.items?.length" class="no-results">
+    No repositories found.
+  </p>
 </main>
 
 <router-outlet />
