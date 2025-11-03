@@ -3,10 +3,27 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { MatIcon } from "@angular/material/icon";
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, CommonModule, HttpClientModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, HttpClientModule, MatButtonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatProgressBarModule,
+    MatIconModule
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
